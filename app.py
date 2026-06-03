@@ -11,9 +11,10 @@ import io
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLabel, QDoubleSpinBox, QComboBox, 
                              QGroupBox, QSlider, QGridLayout, QFrame, QSplitter, 
-                             QCheckBox, QPushButton, QMessageBox)
+                             QCheckBox, QPushButton, QMessageBox, QTabWidget, 
+                             QTableWidget, QTableWidgetItem, QInputDialog)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QKeySequence
 
 # 繪圖相關
 import matplotlib.pyplot as plt 
@@ -42,36 +43,40 @@ plt.rcParams['axes.unicode_minus'] = False
 class Colors:
     # 移除強制文字/背景色，適配 Dark Mode
     UI_BORDER       = "#BDC3C7"
+    UI_TEXT_WHITE   = "#FFFFFF"     #FFFFFF 是純白色，適合用於深色背景上的文字。
+    UI_HEADER_BG    = "#F0F0F0"     #F0F0F0 是一個淺灰色，適合用於表格表頭的背景。
+    UI_HEADER_TEXT  = "#000000"     #000000 是純黑色，適合用於淺色背景上的文字。
     
     # 功能性顏色保持
-    BTN_NORMAL      = "#3498DB"
-    BTN_HOVER       = "#2980B9"
-    BTN_PRESS       = "#1ABC9C"
+    BTN_NORMAL      = "#3498DB"     #3498DB 是一個明亮的藍色，適合用於按鈕的正常狀態，能夠在淺色和深色背景下都保持良好的可見性和對比度。
+    BTN_HOVER       = "#2980B9"     #2980B9 是一個較深的藍色，適合用於按鈕的懸停狀態，能夠提供明確的視覺反饋，讓使用者感受到互動性，同時在不同背景下都能保持良好的可見性。
+    BTN_PRESS       = "#1ABC9C"     #1ABC9C 是一個鮮豔的青綠色，適合用於按鈕的按下狀態，能夠提供強烈的視覺反饋，讓使用者明確感受到按鈕被激活，同時在淺色和深色背景下都能保持良好的可見性和對比度。
     
-    STATUS_RED      = "#C0392B"
-    STATUS_GREEN    = "#27AE60"
-    STATUS_ORANGE   = "#E67E22"
-    STATUS_BLUE     = "#005A8D"
+    STATUS_RED      = "#C0392B"     #C0392B 是一個深紅色，適合用於狀態指示器的錯誤狀態，能夠提供明確的視覺反饋。
+    STATUS_GREEN    = "#27AE60"     #27AE60 是一個深綠色，適合用於狀態指示器的成功狀態，能夠提供明確的視覺反饋。
+    STATUS_ORANGE   = "#E67E22"     #E67E22 是一個橙色，適合用於狀態指示器的警告狀態，能夠提供明確的視覺反饋。
+    STATUS_BLUE     = "#005A8D"     #005A8D 是一個深藍色，適合用於狀態指示器的信息狀態，能夠提供明確的視覺反饋。
 
     # 圖表顏色
-    CHART_HIST      = "#00B3FF"
-    CHART_EDGE      = "#000000"
-    CHART_FIT_LINE  = "#FF0000"
+    CHART_HIST      = "#00B3FF"     #00B3FF 是一個明亮的藍色，適合用於直方圖的填充顏色，能夠提供良好的視覺效果。
+    CHART_EDGE      = "#000000"     #000000 是黑色，適合用於直方圖的邊框顏色。
+    CHART_FIT_LINE  = "#FF0000"     #FF0000 是紅色，適合用於擬合線的顏色，能夠與其他元素形成良好的對比。
     
-    LINE_LSL        = "#D170BC"
-    LINE_USL        = "#0AECAF"
-    LINE_TARGET     = "#50199C"
-    LINE_CL         = "#FF9F43" 
+    LINE_LSL        = "#D170BC"     #D170BC 是一個淡紫色，適合用於下控制限 (LSL) 的線條顏色。
+    LINE_USL        = "#0AECAF"     #0AECAF 是一個淡青色，適合用於上控制限 (USL) 的線條顏色。
+    LINE_TARGET     = "#50199C"     #50199C 是一個深紫色，適合用於目標值的線條顏色。
+    LINE_CL         = "#FF9F43"     #FF9F43 是一個橙色，適合用於中心線 (CL) 的線條顏色。
     
-    ZONE_1SIGMA     = "#9EC897"
-    ZONE_2SIGMA     = "#FFD6A5"
-    ZONE_3SIGMA     = "#FFADAD"
+    ZONE_1SIGMA     = "#9EC897"     #9EC897 是一個淡綠色，適合用於 1σ 區域的填充顏色。
+    ZONE_2SIGMA     = "#FFD6A5"     #FFD6A5 是一個淡橙色，適合用於 2σ 區域的填充顏色。
+    ZONE_3SIGMA     = "#FFADAD"     #FFADAD 是一個淡紅色，適合用於 3σ 區域的填充顏色。
     
-    QQ_DOTS         = "#0E9EFF"
-    QQ_LINE         = "#FF0000"
+    QQ_DOTS         = "#0E9EFF"     #0E9EFF 是一個明亮的藍色，適合用於 Q-Q 圖的數據點顏色。
+    QQ_LINE         = "#FF0000"     #FF0000 是紅色，適合用於 Q-Q 圖的參考線顏色。
+    QQ_DOT_EDGE     = "#000000"     #000000 是純黑色，適合用於 Q-Q 圖數據點的邊框。
     
-    RUN_LINE        = "#34495E"
-    RUN_MARKER      = "#3498DB"
+    RUN_LINE        = "#34495E"     #34495E 是一個深灰色，適合用於趨勢圖的線條顏色。
+    RUN_MARKER      = "#3498DB"     #3498DB 是一個明亮的藍色，適合用於趨勢圖的標記顏色。
 
 # 自定義工具列：移除容易崩潰的 Subplots 與 Customize 按鈕
 class CustomToolbar(NavigationToolbar):
@@ -80,6 +85,80 @@ class CustomToolbar(NavigationToolbar):
 def get_c4_constant(n):
     if n <= 1: return 1
     return np.sqrt(2 / (n - 1)) * (math.gamma(n / 2) / math.gamma((n - 1) / 2))
+
+# ==========================================
+# 自定義帶有複製/貼上功能的表格元件
+# ==========================================
+class CustomTableWidget(QTableWidget):
+    def keyPressEvent(self, event):
+        # 攔截快捷鍵: 支援 Windows (Ctrl) 與 Mac (Cmd)
+        if event.matches(QKeySequence.StandardKey.Copy):
+            self.copy_selection()
+        elif event.matches(QKeySequence.StandardKey.Paste):
+            self.paste_selection()
+        else:
+            super().keyPressEvent(event)
+
+    def copy_selection(self):
+        indexes = self.selectedIndexes()
+        if not indexes: return
+        
+        min_row = min(index.row() for index in indexes)
+        max_row = max(index.row() for index in indexes)
+        min_col = min(index.column() for index in indexes)
+        max_col = max(index.column() for index in indexes)
+        
+        text = ""
+        for r in range(min_row, max_row + 1):
+            row_data = []
+            for c in range(min_col, max_col + 1):
+                item = self.item(r, c)
+                row_data.append(item.text() if item else "")
+            text += "\t".join(row_data) + "\n"
+            
+        QApplication.clipboard().setText(text)
+
+    def paste_selection(self):
+        text = QApplication.clipboard().text()
+        if not text: return
+            
+        current_row = self.currentRow()
+        current_col = self.currentColumn()
+        if current_row < 0 or current_col < 0: return
+
+        # 兼容 Windows (\r\n) 和 Excel 複製的資料格式
+        text = text.replace('\r', '').rstrip('\n')
+        rows_data = text.split('\n')
+        
+        for i, row_str in enumerate(rows_data):
+            if current_row + i >= self.rowCount():
+                self.insertRow(self.rowCount())
+                
+            col_data = row_str.split('\t')
+            for j, cell_val in enumerate(col_data):
+                if current_col + j >= self.columnCount():
+                    self.insertColumn(self.columnCount())
+                    # 找出目前最大的 Group 編號並產生新欄位名稱
+                    max_group_num = 0
+                    # 新增的欄位索引是 self.columnCount() - 1，所以我們檢查它之前的所有欄位
+                    for c_idx in range(self.columnCount() - 1):
+                        header_item = self.horizontalHeaderItem(c_idx)
+                        if header_item:
+                            col_name = header_item.text()
+                            if col_name.startswith("Group"):
+                                try:
+                                    num = int(col_name[5:])
+                                    if num > max_group_num:
+                                        max_group_num = num
+                                except (ValueError, IndexError):
+                                    continue
+                    new_col_name = f"Group{max_group_num + 1}"
+                    self.setHorizontalHeaderItem(self.columnCount() - 1, QTableWidgetItem(new_col_name))
+                item = self.item(current_row + i, current_col + j)
+                if item is None:
+                    item = QTableWidgetItem()
+                    self.setItem(current_row + i, current_col + j, item)
+                item.setText(cell_val)
 
 class CPKApp(QMainWindow):
     def __init__(self):
@@ -94,11 +173,15 @@ class CPKApp(QMainWindow):
         self.default_target = 0.30
         self.default_lsl = 0.15
 
-        # 1. 主介面佈局
+        # 1. 主介面佈局與分頁
+        self.tabs = QTabWidget()
+        self.setCentralWidget(self.tabs)
+
+        # --- Tab 1: CPK 分析 ---
         self.main_widget = QWidget()
-        self.setCentralWidget(self.main_widget)
         self.main_layout = QHBoxLayout(self.main_widget)
         self.main_layout.setContentsMargins(5, 5, 5, 5)
+        self.tabs.addTab(self.main_widget, "📊 CPK 分析 (Analysis)")
 
         # --- 左側控制面板 ---
         self.control_panel = QWidget()
@@ -161,6 +244,34 @@ class CPKApp(QMainWindow):
         self.right_splitter.setStretchFactor(1, 45)
         self.main_layout.addWidget(self.right_splitter)
 
+        # --- Tab 2: 數據編輯 ---
+        self.data_editor_widget = QWidget()
+        self.data_editor_layout = QVBoxLayout(self.data_editor_widget)
+        
+        self.editor_toolbar = QHBoxLayout()
+        self.btn_save_csv = QPushButton("💾 儲存並更新 (Save & Update)")
+        self.btn_save_csv.clicked.connect(self.save_table_to_csv)
+        self.btn_del_row = QPushButton("➖ 刪除選取列 (Del Row)")
+        self.btn_del_row.clicked.connect(self.del_table_row)
+        self.btn_del_col = QPushButton("➖ 刪除選取欄 (Del Col)")
+        self.btn_del_col.clicked.connect(self.del_table_col)
+        self.btn_rename_col = QPushButton("✏️ 重新命名欄位 (Rename Col)")
+        self.btn_rename_col.clicked.connect(self.rename_table_col)
+        
+        self.editor_toolbar.addWidget(self.btn_save_csv)
+        self.editor_toolbar.addWidget(self.btn_del_row)
+        self.editor_toolbar.addWidget(self.btn_del_col)
+        self.editor_toolbar.addWidget(self.btn_rename_col)
+        self.editor_toolbar.addStretch()
+        self.data_editor_layout.addLayout(self.editor_toolbar)
+        
+        self.table_widget = CustomTableWidget()
+        self.data_editor_layout.addWidget(self.table_widget)
+        self.tabs.addTab(self.data_editor_widget, "📝 數據編輯 (Data Editor)")
+        
+        # 套用共用樣式至數據編輯器
+        self.apply_editor_styles()
+
         self.reload_data(silent=True)
 
     def create_controls(self):
@@ -181,7 +292,7 @@ class CPKApp(QMainWindow):
             QCheckBox {{ font-size: 13px; font-weight: bold; }}
             QPushButton {{ 
                 background-color: {Colors.BTN_NORMAL}; 
-                color: #FFFFFF; 
+                color: {Colors.UI_TEXT_WHITE}; 
                 font-weight: bold; font-size: 13px; 
                 padding: 8px; border-radius: 4px; border: none; 
             }}
@@ -189,6 +300,18 @@ class CPKApp(QMainWindow):
             QPushButton:pressed {{ background-color: {Colors.BTN_PRESS}; }}
         """
         self.control_panel.setStyleSheet(style)
+
+    def apply_editor_styles(self):
+        self.data_editor_widget.setStyleSheet(f"""
+            QPushButton {{ 
+                background-color: {Colors.BTN_NORMAL}; color: {Colors.UI_TEXT_WHITE}; 
+                font-weight: bold; font-size: 13px; padding: 6px 10px; border-radius: 4px; border: none; 
+            }}
+            QPushButton:hover {{ background-color: {Colors.BTN_HOVER}; }}
+            QPushButton:pressed {{ background-color: {Colors.BTN_PRESS}; }}
+            QTableWidget {{ gridline-color: {Colors.UI_BORDER}; }}
+            QHeaderView::section {{ background-color: {Colors.UI_HEADER_BG}; color: {Colors.UI_HEADER_TEXT}; padding: 4px; border: 1px solid {Colors.UI_BORDER}; font-weight: bold; }}
+        """)
 
         # 1. 數據來源
         grp_box = QGroupBox("1. 數據來源 (Source)")
@@ -268,7 +391,7 @@ class CPKApp(QMainWindow):
         header = QLabel(title)
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         header.setStyleSheet(f"""
-            background-color: {header_color}; color: #FFFFFF; font-weight: bold; font-size: 12px;
+            background-color: {header_color}; color: {Colors.UI_TEXT_WHITE}; font-weight: bold; font-size: 12px;
             padding: 4px; border-top-left-radius: 5px; border-top-right-radius: 5px;
         """)
         layout.addWidget(header)
@@ -368,6 +491,7 @@ LSL,0.15,0.303,0.303,0.321,0.265,0.270
             self.combo_group.blockSignals(False)
 
             self.update_plot()
+            self.load_data_to_table()
             if not silent: QMessageBox.information(self, "成功", "✅ CSV 資料已成功重新讀取！")
 
         except PermissionError:
@@ -586,7 +710,7 @@ LSL,0.15,0.303,0.303,0.321,0.265,0.270
         osr = np.asarray(osr_raw, dtype=np.float64)
         slope = float(slope_raw)  # type: ignore
         intercept = float(intercept_raw)  # type: ignore
-        ax.plot(osm, osr, 'o', color=Colors.QQ_DOTS, markersize=4, markeredgecolor="black", markeredgewidth=0.5, alpha=0.6)
+        ax.plot(osm, osr, 'o', color=Colors.QQ_DOTS, markersize=4, markeredgecolor=Colors.QQ_DOT_EDGE, markeredgewidth=0.5, alpha=0.6)
         ax.plot(osm, slope*osm + intercept, color=Colors.QQ_LINE, linestyle="-", linewidth=2)
         ax.set_title("Q-Q Plot", fontsize=10, fontweight='bold')
         ax.set_xlabel(""); ax.set_ylabel("")
@@ -594,6 +718,93 @@ LSL,0.15,0.303,0.303,0.321,0.265,0.270
         ax.grid(True, alpha=0.3)
         self.fig_qq.tight_layout()
         self.canvas_qq.draw()
+
+    # ==========================================
+    # 數據編輯器相關功能
+    # ==========================================
+    def load_data_to_table(self):
+        if self.df is None or self.df.empty:
+            return
+            
+        # 預留額外的空白區域，讓使用者可以直接貼上資料，無需一直按新增
+        EXTRA_ROWS = 50
+        EXTRA_COLS = 10
+        
+        self.table_widget.setRowCount(self.df.shape[0] + EXTRA_ROWS)
+        self.table_widget.setColumnCount(self.df.shape[1] + EXTRA_COLS)
+        
+        headers = list(self.df.columns.astype(str))
+        # 找出目前最大的 Group 編號
+        max_group_num = 0
+        for col_name in headers:
+            if col_name.startswith("Group"):
+                try:
+                    num = int(col_name[5:])
+                    if num > max_group_num:
+                        max_group_num = num
+                except (ValueError, IndexError):
+                    continue
+
+        for i in range(EXTRA_COLS):
+            headers.append(f"Group{max_group_num + i + 1}")
+        self.table_widget.setHorizontalHeaderLabels(headers)
+        
+        for row in range(self.df.shape[0]):
+            for col in range(self.df.shape[1]):
+                val = self.df.iloc[row, col]
+                item = QTableWidgetItem(str(val) if pd.notna(val) else "")
+                self.table_widget.setItem(row, col, item)
+                
+    def save_table_to_csv(self):
+        rows = self.table_widget.rowCount()
+        cols = self.table_widget.columnCount()
+        
+        headers = []
+        for col in range(cols):
+            header_item = self.table_widget.horizontalHeaderItem(col)
+            headers.append(header_item.text() if header_item else f"Col{col}")
+            
+        data = []
+        for row in range(rows):
+            row_data = []
+            for col in range(cols):
+                item = self.table_widget.item(row, col)
+                row_data.append(item.text() if item else "")
+            data.append(row_data)
+            
+        new_df = pd.DataFrame(data, columns=headers)
+        
+        # 儲存前清除完全空白的列和欄 (自動清理保留區域)
+        new_df.replace("", np.nan, inplace=True)
+        new_df.dropna(how="all", axis=0, inplace=True)
+        new_df.dropna(how="all", axis=1, inplace=True)
+        new_df.fillna("", inplace=True)
+        
+        try:
+            new_df.to_csv('DATA.csv', index=False, encoding='utf-8-sig')
+            QMessageBox.information(self, "成功", "✅ 資料已成功儲存並同步更新分析結果！")
+            self.reload_data(silent=True)
+        except PermissionError:
+            QMessageBox.critical(self, "檔案被佔用", "❌ 無法儲存 DATA.csv\n\n原因：檔案正在 Excel 中開啟。請「關閉 Excel」後再試一次。")
+        except Exception as e:
+            QMessageBox.critical(self, "錯誤", f"儲存失敗: {str(e)}")
+
+    def del_table_row(self):
+        row = self.table_widget.currentRow()
+        if row >= 0: self.table_widget.removeRow(row)
+        else: QMessageBox.warning(self, "提示", "請先點選想刪除的「列 (Row)」")
+
+    def del_table_col(self):
+        col = self.table_widget.currentColumn()
+        if col >= 0: self.table_widget.removeColumn(col)
+        else: QMessageBox.warning(self, "提示", "請先點選想刪除的「欄位 (Column)」")
+
+    def rename_table_col(self):
+        col = self.table_widget.currentColumn()
+        if col < 0: return QMessageBox.warning(self, "提示", "請先點選一個欄位內的儲存格")
+        old_name = self.table_widget.horizontalHeaderItem(col).text() if self.table_widget.horizontalHeaderItem(col) else f"Col{col}"
+        new_name, ok = QInputDialog.getText(self, "重新命名欄位", "輸入新名稱:", text=old_name)
+        if ok and new_name: self.table_widget.setHorizontalHeaderItem(col, QTableWidgetItem(new_name))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
