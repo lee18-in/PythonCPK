@@ -99,13 +99,7 @@ jobs:
           if [ -f "assets/pythoncpk.png" ]; then
             cp assets/pythoncpk.png AppDir/pythoncpk.png
           else
-            python - <<'PYEOF'
-from PIL import Image, ImageDraw
-img = Image.new("RGBA", (256, 256), (66, 133, 244, 255))
-d = ImageDraw.Draw(img)
-d.ellipse([32, 32, 224, 224], fill=(255, 255, 255, 200))
-img.save("AppDir/pythoncpk.png")
-PYEOF
+            python -c "from PIL import Image, ImageDraw; img = Image.new('RGBA', (256, 256), (66, 133, 244, 255)); d = ImageDraw.Draw(img); d.ellipse([32, 32, 224, 224], fill=(255, 255, 255, 200)); img.save('AppDir/pythoncpk.png')"
           fi
 
           # .desktop（用 printf 避免 heredoc 縮排汙染）
