@@ -1,0 +1,127 @@
+name: Package & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Windows: 單一 EXE
+  # ─────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Windows EXE
+        run: >
+          pyinstaller
+          --name PythonCPK
+          --onefile
+          --windowed
+          --collect-all PyQt6
+          app.py
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          files: dist/PythonCPK.exe
+
+  # ─────────────────────────────────────────────
+  # Linux: AppImage
+  # ─────────────────────────────────────────────
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libgl1 libegl1 libglib2.0-0 \
+            libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+            libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 \
+            libxcb-xkb1 libxkbcommon-x11-0
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: >
+          pyinstaller
+          --name PythonCPK
+          --onedir
+          --collect-all PyQt6
+          app.py
+
+      - name: Build AppImage
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage \
+            -O appimagetool.AppImage
+          chmod +x appimagetool.AppImage
+
+          # AppDir 結構
+          mkdir -p AppDir/usr/bin
+          cp -r dist/PythonCPK/* AppDir/usr/bin/
+
+          # 圖示：優先用 assets/pythoncpk.png，否則用 Pillow 產生佔位圖
+          if [ -f "assets/pythoncpk.png" ]; then
+            cp assets/pythoncpk.png AppDir/pythoncpk.png
+          else
+            python - <<'PYEOF'
+from PIL import Image, ImageDraw
+img = Image.new("RGBA", (256, 256), (66, 133, 244, 255))
+d = ImageDraw.Draw(img)
+d.ellipse([32, 32, 224, 224], fill=(255, 255, 255, 200))
+img.save("AppDir/pythoncpk.png")
+PYEOF
+          fi
+
+          # .desktop（用 printf 避免 heredoc 縮排汙染）
+          printf '[Desktop Entry]\nName=PythonCPK\nExec=PythonCPK\nIcon=pythoncpk\nType=Application\nCategories=Utility;\n' \
+            > AppDir/PythonCPK.desktop
+
+          # AppRun（用 printf 避免 heredoc 縮排汙染）
+          printf '#!/bin/bash\nHERE="$(dirname "$(readlink -f "${0}")")"\nexec "$HERE/usr/bin/PythonCPK" "$@"\n' \
+            > AppDir/AppRun
+          chmod +x AppDir/AppRun
+
+          # APPIMAGE_EXTRACT_AND_RUN=1：CI 沒有 FUSE，不能掛載自身
+          APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool.AppImage AppDir PythonCPK-x86_64.AppImage
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          files: PythonCPK-x86_64.AppImage
