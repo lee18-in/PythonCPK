@@ -1,3 +1,5 @@
+<!-- AI AGENTS: Read ./AGENTS.md first, then ./LLM_MEMORY.md.
+     Do NOT write planning content into this file. -->
 # Process Capability Analysis Pro (PythonCPK)
 
 Process Capability Analysis Pro 是一個基於 Python 與 PyQt6 打造的製程能力分析工具。它提供直覺的圖形化介面 (GUI)，協助工程師、品管人員快速計算與視覺化製程能力指標 (CPK, PPK)。
