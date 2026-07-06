@@ -29,6 +29,12 @@
 
 ## C. 交接日誌(只追加,不刪改;最新在最上,每筆一個小節)
 
+### 2026-07-06 接手時發現未提交變更 [build] 使用工具: Claude Code
+
+- 完成了什麼: 接手時工作樹不乾淨，LLM_MEMORY.md E 區已補充，但未 commit
+- 下一個 agent 該做什麼: 無
+- 地雷警告: ⚠️ 前一個 agent 未遵守 AGENTS.md §2 的交接協定（應在切換前 commit）
+
 <!-- 範例格式,新條目複製此結構插入在本註解下方:
 
 ### 2026-07-05 21:07 [build] 使用工具: Antigravity
@@ -39,3 +45,9 @@
 -->
 
 ## D. 已封存結論(自〈總結封存〉搬入,唯讀)
+
+## E. 專案技術脈絡(依專案填寫,agent 得隨專案實況更新,保持精簡)
+
+- 建置指令: `python app.py` (啟動 PyQt6 GUI 分析工具)
+- 測試指令: 無特定自動化測試指令（手動 GUI 測試）
+- 程式碼慣例: Python 3.8+ / PyQt6 / Numpy / Pandas / Scipy / Matplotlib / Seaborn (PEP8)
