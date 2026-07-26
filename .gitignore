@@ -1,0 +1,15 @@
+# Python 編譯產物
+__pycache__/
+*.pyc
+
+# 虛擬環境
+.venv/
+
+# PyInstaller 打包產物
+build/
+dist/
+*.spec
+
+# AppImage 打包產物
+*.AppImage
+AppDir/
