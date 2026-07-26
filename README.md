@@ -4,6 +4,22 @@
 
 Process Capability Analysis Pro 是一個基於 Python 與 PyQt6 打造的製程能力分析工具。它提供直覺的圖形化介面 (GUI)，協助工程師、品管人員快速計算與視覺化製程能力指標 (CPK, PPK)。
 
+## ⬇️ 下載執行檔 (Downloads)
+
+免安裝 Python 環境，下載對應平台的檔案即可直接執行。
+
+| 平台 | 檔案 | 下載連結 |
+| ---- | ---- | -------- |
+| Windows | `PythonCPK.exe` | [GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest) ・ [Google Drive](https://drive.google.com/file/d/1lfFs8Xbb8VX1WigY-_AlcZCcGL_BDAGq/view?usp=drive_link) |
+| Linux | `PythonCPK-x86_64.AppImage` | [GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest) ・ [Google Drive](https://drive.google.com/file/d/1WaoFvXiQzaU33atc9k4lI-HHQNf5PZXU/view?usp=drive_link) |
+
+> **Linux 使用者**：下載後需先賦予執行權限才能啟動。
+>
+> ```bash
+> chmod +x PythonCPK-x86_64.AppImage
+> ./PythonCPK-x86_64.AppImage
+> ```
+
 ## ✨ 功能特色 (Features)
 
 - **開箱即用**：若無指定的 `DATA.csv`，程式將自動生成一份 5.8 Sigma 的範例數據供您測試。
