@@ -8,10 +8,13 @@ Process Capability Analysis Pro 是一個基於 Python 與 PyQt6 打造的製程
 
 免安裝 Python 環境，下載對應平台的檔案即可直接執行。
 
-| 平台 | 檔案 | 下載連結 |
-| ---- | ---- | -------- |
-| Windows | `PythonCPK.exe` | [GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest) ・ [Google Drive](https://drive.google.com/file/d/1lfFs8Xbb8VX1WigY-_AlcZCcGL_BDAGq/view?usp=drive_link) |
-| Linux | `PythonCPK-x86_64.AppImage` | [GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest) ・ [Google Drive](https://drive.google.com/file/d/1WaoFvXiQzaU33atc9k4lI-HHQNf5PZXU/view?usp=drive_link) |
+[GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest)
+
+### Windows ： `PythonCPK.exe`
+[Google Drive](https://drive.google.com/file/d/1lfFs8Xbb8VX1WigY-_AlcZCcGL_BDAGq/view?usp=drive_link)
+
+### Linux ： `PythonCPK-x86_64.AppImage`
+[Google Drive](https://drive.google.com/file/d/1WaoFvXiQzaU33atc9k4lI-HHQNf5PZXU/view?usp=drive_link)
 
 > **Linux 使用者**：下載後需先賦予執行權限才能啟動。
 >

@@ -4,7 +4,7 @@
 
 - 目前階段: build
 - 最後更新: 2026-07-26 / 當時階段: build（CI 打包、.gitignore、README 下載段落）
-- 最新 commit: f884fc5 [build] 潤飾 README 下載段落（本筆記憶更新 commit 隨後推出）
+- 最新 commit: d191521 [build] 更新記憶：發版流程與二進位散佈原則寫入 E 區（本筆為使用者手改 README 版式，隨後推出）
 - 進行中任務: 等待新 session/新工具審閱 `package.yml` 與 `.gitignore` 異動（CI 實測已通過，見〈交接日誌〉最上方條目的檢查點 1-5）
 - 阻塞點: 目前無
 
@@ -38,6 +38,8 @@
   **再追加**：潤飾 README「Bin Download」段落（純 README 異動，依 §2.1 不需審閱）。原段落問題：用 `#` H1 與專案標題同級、裸 URL 未做成 markdown 連結、未標示平台、與其他章節的 `## emoji 中文 (English)` 風格不一致、尾端多餘空行。改為 `## ⬇️ 下載執行檔 (Downloads)`，以表格列出 Windows/Linux 兩列，各自提供 GitHub Releases（指向 `/releases/latest`，永遠是最新版）與原有 Google Drive 兩個來源，並補上 AppImage 必要的 `chmod +x` 說明。保留原 Google Drive 連結未刪。驗證：`grep -n '^#'` 確認標題層級為單一 H1 + 全部章節 H2 + 一個巢狀 H3。
 
   **決策記錄**：使用者詢問「推新的上去會不會自動編譯」，說明現況為 tag-only 觸發後，**使用者明確決定維持現況，不加 `on.push.branches: [main]`**（理由：改 README 也會觸發 6 分鐘打包與 350MB artifact，無意義；公開 repo 雖然 Actions 分鐘數免費仍屬浪費）。相關實況已整理進 E 區〈發版流程〉〈二進位檔散佈〉〈README 下載連結〉三條，後續 agent 直接查 E 區即可，不必重新推導。使用者另指示直接 push，本次連同前兩筆未推的 commit（b943a93、f884fc5）一併推出。
+
+  **使用者自行修改 README 下載段落**：使用者手動把該段從表格改為 H3 分段版式——`## ⬇️ 下載執行檔 (Downloads)` 下先放一條共用的 [GitHub Releases](https://github.com/lee18-in/PythonCPK/releases/latest) 連結，再以 `### Windows ： \`PythonCPK.exe\`` 與 `### Linux ： \`PythonCPK-x86_64.AppImage\`` 兩個 H3 各自掛 Google Drive 連結，`chmod +x` 提示區塊保留。此為使用者的版式偏好，agent 不得逕自改回表格。已依指示 commit 並 push（純 README 異動，依 §2.1 不需審閱）。核對結果：三個連結 URL 與改動前完全一致、無遺失，僅版式與 Releases 連結由重複兩次改為共用一條。
 - 下一個 agent 該做什麼: 本次改動仍需審閱（已 push 且 CI 實測通過，但依 §2.1 撰寫者不得自審）：(1) `git diff a4aeac2 -- .github/workflows/package.yml` 確認只動了上述三處，沒碰到既有已驗證可用的 PyInstaller / AppImage 打包邏輯；(2) 核對 `startsWith(github.ref, 'refs/tags/')` guard 是否確實蓋住兩個 job 的 release 步驟，避免手動觸發污染 Releases；(3) 確認兩個 upload-artifact 的 `path` 與各自 job 實際產物路徑相符（Windows: `dist/PythonCPK.exe`；Linux: 工作目錄根的 `PythonCPK-x86_64.AppImage`）；(4) CI 已實測通過，審閱重點放在程式碼與規則正確性，不需再驗證「能不能跑」；(5) 新增的 `.gitignore` 8 條規則是否有誤擋必要檔案（用 `git ls-files` 對照 `git status --ignored --short` 確認追蹤清單未縮減），以及 `git rm --cached` 只移除了 `.pyc`、沒動到其他追蹤檔案。
 - 地雷警告: AppImage 的 fallback 圖示依賴 PIL，目前是靠 matplotlib 間接帶進 Pillow，requirements.txt 未直接列出，若日後移除 matplotlib 會壞。
 
