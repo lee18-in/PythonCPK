@@ -3,8 +3,8 @@
 ## A. 目前狀態(每次交接必更新)
 
 - 目前階段: build
-$12026-10-22 11:15 / 當時階段: maintain
-- 交接基準 commit: bb6d8ac [build] README 下載段落改為 H3 分段版式（使用者手改）
+- 最後更新: 2026-10-28 11:39 / 當時階段: maintain
+- 交接基準 commit: d752f91 [maintain] 升級 AI agent 工作流至 Playbook v11
 - 進行中任務: 等待新 session/新工具審閱 `package.yml` 與 `.gitignore` 異動（CI 實測已通過，見〈交接日誌〉最上方條目的檢查點 1-5）
 - 阻塞點: 目前無
 
@@ -28,6 +28,14 @@ $12026-10-22 11:15 / 當時階段: maintain
 - [ ]
 
 ## C. 交接日誌(只追加,不刪改;最新在最上,每筆一個小節)
+
+### 2026-10-28 11:39 [maintain] 使用工具: Cursor Grok 4.7
+
+- 完成了什麼: 使用者指示把本目錄 AGENTS.md 從 online v11 整份覆蓋成 v12。與其他 v11 檔內容相同，沒有模板外自訂規則。覆蓋前 hash d752f91。
+- 驗證方式: 讀檔首兩行是 Playbook-Version: 12 與 Playbook-Variant: online，且有「## 6. 對人訂正」。
+- 下一個 agent 該做什麼: 本次改動需要審閱：對照 v12 模板，確認條文一致且 A 區進行中任務沒被改寫。等待新 session／新工具審閱。
+- 地雷警告: 無
+
 
 ### 2026-10-22 11:15 [maintain] 使用工具: Cursor Auto
 
