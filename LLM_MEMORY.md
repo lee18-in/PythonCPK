@@ -3,10 +3,10 @@
 ## A. 目前狀態(每次交接必更新)
 
 - 目前階段: build
-- 最後更新: 2026-10-28 11:39 / 當時階段: maintain
+- 最後更新: 2026-11-18 16:01 / 當時階段: maintain
 - 交接基準 commit: d752f91 [maintain] 升級 AI agent 工作流至 Playbook v11
 - 進行中任務: 等待新 session/新工具審閱 `package.yml` 與 `.gitignore` 異動（CI 實測已通過，見〈交接日誌〉最上方條目的檢查點 1-5）
-- 阻塞點: 目前無
+- 阻塞點: 2026-10-28 11:39 v12 覆蓋仍「需要審閱」（基準 `d752f91..5cfe749`）
 
 ## B. 規劃(規劃階段 [plan] 專屬區;狀態: 草稿 | 已定案)
 
@@ -28,6 +28,13 @@
 - [ ]
 
 ## C. 交接日誌(只追加,不刪改;最新在最上,每筆一個小節)
+
+### 2026-11-18 16:01 [maintain] 使用工具: Antigravity
+
+- 完成了什麼: 依使用者指示將本目錄 `AGENTS.md` 自 Online v12 整份覆蓋升級至 v13（無模板外自訂規則；覆蓋前 hash `5cfe749`）。為何改：同步全 12 專案憲法至 v13。
+- 驗證方式: `head -n 2 AGENTS.md` 為 `Playbook-Version: 13` 與 `Playbook-Variant: online`，全文與 `Andy_AI_AGENT_WorkFlow/AGENTS.md` 一致。
+- 下一個 agent 該做什麼: 本次改動需要審閱：對照 Online v13 模板確認條文一致且 A 區進行中任務未遭改寫；並於〈阻塞點〉續列前次待審。等待 `new session` 審閱。
+- 地雷警告: 〈交接日誌〉約 12.0 KB（>10 KB），接續工作須依 §0 壓縮
 
 ### 2026-10-28 11:39 [maintain] 使用工具: Cursor Grok 4.7
 
